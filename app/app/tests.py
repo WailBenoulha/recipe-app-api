@@ -11,3 +11,4 @@ class CalcTests(SimpleTestCase):
     def test_substract(self):
         res = calcs.substract(10,15)
         self.assertEqual(res,5)
+        
