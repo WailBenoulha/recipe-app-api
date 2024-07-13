@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'drf_spectacular',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +139,21 @@ AUTH_USER_MODEL = 'core.User'
 Rest_FRAMEWORK =  {
     'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openai.AutoSchema',
 }
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'RECIPE-APP-API',
+    'DESCRIPTION': 'description',
+    'VERSION': '1.0.0',
+    # other spectacular settings
+}
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.SessionAuthentication',
+#         'rest_framework.authentication.TokenAuthentication',
+#     ],
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',
+#     ],
+#     # Add other settings as needed
+# }
