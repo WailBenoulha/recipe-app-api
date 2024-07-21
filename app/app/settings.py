@@ -138,15 +138,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.User'
 
 Rest_FRAMEWORK =  {
-    'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openai.AutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'RECIPE-APP-API',
-    'DESCRIPTION': 'description',
-    'VERSION': '1.0.0',
-    # other spectacular settings
-}
 
 # REST_FRAMEWORK = {
 #     'DEFAULT_AUTHENTICATION_CLASSES': [
