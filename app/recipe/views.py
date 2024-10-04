@@ -10,7 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from core.models import Recipe,Tag,Ingredient
+from core.models import Recipe,Tag,Ingredient,Instruction,Review
 from recipe import serializers
 
 
@@ -71,4 +71,12 @@ class TagViewSet(BaseRecipeAttrViewSet):
     
 class IngredientViewSet(BaseRecipeAttrViewSet):
     serializer_class = serializers.IngredientSerializer
-    queryset = Ingredient.objects.all()    
+    queryset = Ingredient.objects.all()  
+
+class Instruction (BaseRecipeAttrViewSet):
+    serializer_class = serializers.InstructionSerializer
+    queryset = Instruction.objects.all()
+
+class ReviewViewSet(BaseRecipeAttrViewSet):
+    serializer_class = serializers.ReviewSerializer
+    queryset = Review.objects.all() 

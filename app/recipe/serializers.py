@@ -1,10 +1,22 @@
 from rest_framework import serializers
-from core.models import Recipe,Tag,Ingredient
+from core.models import Recipe,Tag,Ingredient,Instruction,Review
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         models = Ingredient
         fields = ['id','name']
+        read_only_fields = ['id']
+
+class InstructionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Instruction
+        fields = ['id','description']
+        read_only_fields = ['id']
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id','rating','review']
         read_only_fields = ['id']
 
 class TagSerializer(serializers.ModelSerializer):
@@ -16,10 +28,12 @@ class TagSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True,required=False)
     ingredients = IngredientSerializer(many=True,required=False)
+    instructions = InstructionSerializer(many=True,required=False)
+    review = ReviewSerializer(many=True,required=False)
 
     class Meta:
         model = Recipe
-        fields = ['id','title','time_minutes','price','link','tags','ingredients']
+        fields = ['id','title','tags','ingredients','duration','image']
         read_only_fields = ['id']
     
     def get_or_create_tags(self,tags,recipe):
@@ -39,10 +53,29 @@ class RecipeSerializer(serializers.ModelSerializer):
                 **ingredient,
             )
             recipe.ingredients.add(ingredient_obj)
+            
+    def get_or_create_instruction(self,instructions,recipe):
+        auth_user = self.context['request'].user
+        for instruction in instructions:
+            instruction_obj, created = Instruction.objects.get_or_create(
+                user = auth_user,
+                **instruction,
+            )
+            recipe.instructions.add(instruction_obj)
+    
+    def get_or_create_review(self,reviews,recipe):
+        auth_user = self.context['request'].user
+        for review in reviews:
+            review_obj, created = Review.objects.get_or_create(
+                user = auth_user,
+                **review,
+            )
+            recipe.review.add(review_obj)
 
     def create(self,validated_data):
         tags = validated_data.pop('tags',[])
         ingredients = validated_data.pop('ingredients',[])
+        instructions = validated_data.pop('instructions',[])
         recipe = Recipe.objects.create(**validated_data)
         self.get_or_create_tags(tags,recipe)
         self._get_or_create_ingredients(ingredients,recipe)
@@ -54,6 +87,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     def update(self,instance,validated_data):
         tags = validated_data.pop('tags',None)
         ingredients = validated_data.pop('ingredients',None)
+        instructions = validated_data.pop('instructions',None)
         if tags is not None:
             instance.tags.clear()
             self._get_or_create_tags(tags,instance)
